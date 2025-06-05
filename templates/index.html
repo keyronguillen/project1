@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <title>GitHub Repo Tracker</title>
+</head>
+<body>
+  <h1>GitHub Repo Tracker</h1>
+  <form method="post">
+    <input type="text" name="username" placeholder="Enter GitHub username" value="{{ username }}" required>
+    <select name="sort">
+      <option value="updated" {% if sort == "updated" %}selected{% endif %}>Last Updated</option>
+      <option value="stars" {% if sort == "stars" %}selected{% endif %}>Stars</option>
+      <option value="full_name" {% if sort == "full_name" %}selected{% endif %}>Name</option>
+    </select>
+    <input type="hidden" name="page" value="1">
+    <button type="submit">Get Repos</button>
+  </form>
+
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  {% if repos %}
+    <h2>Repositories (Page {{ page }})</h2>
+    <ul>
+      {% for repo in repos %}
+        <li>
+          <a href="{{ repo.url }}" target="_blank"><strong>{{ repo.name }}</strong></a>
+          ⭐ {{ repo.stars }} (Updated: {{ repo.updated }})
+        </li>
+      {% endfor %}
+    </ul>
+
+    <form method="post" style="display:inline;">
+      <input type="hidden" name="username" value="{{ username }}">
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <input type="hidden" name="page" value="{{ page - 1 }}">
+      <button type="submit" {% if page <= 1 %}disabled{% endif %}>Previous</button>
+    </form>
+
+    <form method="post" style="display:inline;">
+      <input type="hidden" name="username" value="{{ username }}">
+      <input type="hidden" name="sort" value="{{ sort }}">
+      <input type="hidden" name="page" value="{{ page + 1 }}">
+      <button type="submit">Next</button>
+    </form>
+  {% endif %}
+</body>
+</html>
