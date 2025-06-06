@@ -1,0 +1,25 @@
+<h2>Gestión de Usuarios</h2>
+
+<form (ngSubmit)="createUser()">
+  <input [(ngModel)]="newUser.usuario" name="usuario" placeholder="Usuario" required />
+  <input [(ngModel)]="newUser.contrasena" name="contrasena" placeholder="Contraseña" required type="password" />
+  <button type="submit">Crear Usuario</button>
+</form>
+
+<hr />
+
+<ul>
+  <li *ngFor="let user of users">
+    <div *ngIf="selectedUser?._id !== user._id">
+      {{ user.usuario }}
+      <button (click)="editUser(user)">Editar</button>
+      <button (click)="deleteUser(user._id)">Eliminar</button>
+    </div>
+    <div *ngIf="selectedUser?._id === user._id">
+      <input [(ngModel)]="selectedUser.usuario" name="usuario" />
+      <input [(ngModel)]="selectedUser.contrasena" name="contrasena" type="password" />
+      <button (click)="updateUser()">Guardar</button>
+      <button (click)="cancelEdit()">Cancelar</button>
+    </div>
+  </li>
+</ul>

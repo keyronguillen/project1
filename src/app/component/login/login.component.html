@@ -1,0 +1,30 @@
+<form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+  <div>
+    <label for="usuario">Usuario</label>
+    <input type="text" id="usuario" name="usuario" [(ngModel)]="loginData.usuario" required #usuario="ngModel" />
+    <div *ngIf="usuario.invalid && usuario.touched" style="color:red;">
+      Usuario es requerido
+    </div>
+  </div>
+
+  <div>
+    <label for="contrasena">Contraseña</label>
+    <input type="password" id="contrasena" name="contrasena" [(ngModel)]="loginData.contrasena" required
+      #contrasena="ngModel" />
+    <div *ngIf="contrasena.invalid && contrasena.touched" style="color:red;">
+      Contraseña es requerida
+    </div>
+  </div>
+
+  <div *ngIf="errorMsg" style="color:red;">{{ errorMsg }}</div>
+  
+  <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+</form>
+
+<div style="margin-top: 20px;">
+  <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+</div>
+
+<div style="margin-top: 20px;">
+  <p>¿Olvidaste tu contraseña? <a routerLink="/reset-password">Recupera tu contraseña</a></p>
+</div>
