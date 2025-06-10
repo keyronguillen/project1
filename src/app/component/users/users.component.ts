@@ -1,61 +1,106 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { UserService, User } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-user',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
 })
-export class UserManagementComponent implements OnInit {
-  users: any[] = [];
-  selectedUser: any = null;
-  newUser = {
-    usuario: '',
-    contrasena: '',
-  };
+export class UserComponent implements OnInit {
+  users: User[] = [];
+  nuevoUsuario: Partial<User> & { contrasena?: string } = this.usuarioVacio();
+  usuarioEditando: Partial<User> & { contrasena?: string } | null = null;
+  mostrarFormulario = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private toastr: ToastrService) {}
 
-  ngOnInit(): void {
-    this.getUsers();
+  ngOnInit() {
+    this.obtenerUsuarios();
   }
 
-  getUsers() {
-    this.userService.getUsers().subscribe((res) => {
-      this.users = res;
+  usuarioVacio() {
+    return {
+      nombre: '',
+      apellidos: '',
+      telefono: '',
+      dni: '',
+      correo: '',
+      usuario: '',
+      genero: '',
+      contrasena: '',
+    };
+  }
+
+  obtenerUsuarios() {
+    this.userService.getUsers().subscribe({
+      next: (data) => (this.users = data),
+      error: (err) => this.toastr.error('Error al obtener usuarios'),
     });
   }
 
-  createUser() {
-    this.userService.createUser(this.newUser).subscribe(() => {
-      this.getUsers();
-      this.newUser = { usuario: '', contrasena: '' };
-    });
+  crearUsuario() {
+    if (this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena) {
+      this.userService.createUser(this.nuevoUsuario).subscribe({
+        next: () => {
+          this.obtenerUsuarios();
+          this.toastr.success('Usuario creado correctamente');
+          this.nuevoUsuario = this.usuarioVacio();
+          this.mostrarFormulario = false;
+        },
+        error: () => this.toastr.error('Error al crear usuario'),
+      });
+    }
   }
 
-  editUser(user: any) {
-    this.selectedUser = { ...user };
+  eliminarUsuario(id: number) {
+    if (confirm('¿Estás seguro de eliminar este usuario?')) {
+      this.userService.deleteUser(id.toString()).subscribe({
+        next: () => {
+          this.obtenerUsuarios();
+          this.toastr.success('Usuario eliminado');
+        },
+        error: () => this.toastr.error('Error al eliminar usuario'),
+      });
+    }
   }
 
-  updateUser() {
-    const { _id, ...rest } = this.selectedUser;
-    this.userService.updateUser(_id, rest).subscribe(() => {
-      this.getUsers();
-      this.selectedUser = null;
-    });
+  editarUsuario(user: User) {
+    this.usuarioEditando = { ...user };
   }
 
-  deleteUser(id: string) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.getUsers();
-    });
+  guardarCambiosUsuario() {
+    if (this.usuarioEditando?.id) {
+      const { contrasena, ...resto } = this.usuarioEditando;
+      this.userService.updateUser(this.usuarioEditando.id.toString(), resto).subscribe({
+        next: () => {
+          this.obtenerUsuarios();
+          this.usuarioEditando = null;
+          this.toastr.success('Usuario actualizado');
+        },
+        error: () => this.toastr.error('Error al actualizar usuario'),
+      });
+    }
   }
 
-  cancelEdit() {
-    this.selectedUser = null;
+  cancelarEdicion() {
+    this.usuarioEditando = null;
+  }
+
+  mostrarDetalles(user: User) {
+    alert(`Detalles de ${user.usuario}:\nNombre completo: ${user.nombre} ${user.apellidos}`);
+  }
+
+  mostrarCambiarContrasena(user: User) {
+    const nuevaPass = prompt(`Nueva contraseña para ${user.usuario}:`);
+    if (nuevaPass) {
+      this.userService.updateUser(user.id.toString(), { contrasena: nuevaPass }).subscribe({
+        next: () => this.toastr.success('Contraseña actualizada'),
+        error: () => this.toastr.error('Error al cambiar contraseña'),
+      });
+    }
   }
 }

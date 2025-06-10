@@ -4,7 +4,7 @@ import { RegisterComponent } from './component/register/register.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AuthGuard } from './auth/auth.guard';
 import { NoAuthGuard } from './auth/no-auth.guard';
-// import { UsersComponent } from './components/users/users.component';
+import { UserComponent } from './component/users/users.component';
 
 export const routes: Routes = [
   {
@@ -16,11 +16,11 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard], // ruta protegida
-    // children: [
-    //   { path: 'user', component: UsersComponent},
-    //   // Puedes agregar más rutas hijas aquí si es necesario
-    // ],
+    canActivate: [AuthGuard], // ruta protegida,
+    children: [
+      { path: 'users', component: UserComponent },
+      // { path: '', redirectTo: 'users', pathMatch: 'full' } // redirige a users por defecto
+    ],
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },

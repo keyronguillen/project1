@@ -1,25 +1,65 @@
-<h2>Gestión de Usuarios</h2>
+<h2>Lista de Usuarios</h2>
 
-<form (ngSubmit)="createUser()">
-  <input [(ngModel)]="newUser.usuario" name="usuario" placeholder="Usuario" required />
-  <input [(ngModel)]="newUser.contrasena" name="contrasena" placeholder="Contraseña" required type="password" />
-  <button type="submit">Crear Usuario</button>
-</form>
+<button (click)="mostrarFormulario = !mostrarFormulario">
+  {{ mostrarFormulario ? 'Cancelar' : 'Crear nuevo usuario' }}
+</button>
 
-<hr />
+<!-- Formulario de creación -->
+<div *ngIf="mostrarFormulario">
+  <form (ngSubmit)="crearUsuario()">
+    <input [(ngModel)]="nuevoUsuario.nombre" name="nombre" placeholder="Nombre" required />
+    <input [(ngModel)]="nuevoUsuario.apellidos" name="apellidos" placeholder="Apellidos" required />
+    <input [(ngModel)]="nuevoUsuario.telefono" name="telefono" placeholder="Teléfono" />
+    <input [(ngModel)]="nuevoUsuario.dni" name="dni" placeholder="DNI" />
+    <input [(ngModel)]="nuevoUsuario.correo" name="correo" placeholder="Correo" />
+    <input [(ngModel)]="nuevoUsuario.usuario" name="usuario" placeholder="Usuario" required />
+    <input [(ngModel)]="nuevoUsuario.genero" name="genero" placeholder="Género" />
+    <input [(ngModel)]="nuevoUsuario.contrasena" name="contrasena" placeholder="Contraseña" required />
+    <button type="submit">Guardar</button>
+  </form>
+</div>
 
-<ul>
-  <li *ngFor="let user of users">
-    <div *ngIf="selectedUser?._id !== user._id">
-      {{ user.usuario }}
-      <button (click)="editUser(user)">Editar</button>
-      <button (click)="deleteUser(user._id)">Eliminar</button>
-    </div>
-    <div *ngIf="selectedUser?._id === user._id">
-      <input [(ngModel)]="selectedUser.usuario" name="usuario" />
-      <input [(ngModel)]="selectedUser.contrasena" name="contrasena" type="password" />
-      <button (click)="updateUser()">Guardar</button>
-      <button (click)="cancelEdit()">Cancelar</button>
-    </div>
-  </li>
-</ul>
+<!-- Tabla de usuarios -->
+<table border="1" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Nombre Completo</th>
+      <th>Correo</th>
+      <th>DNI</th>
+      <th>Genero</th>
+      <th>Telefono</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.usuario }}</td>
+      <td>{{ user.nombre }} {{ user.apellidos }}</td>
+      <td>{{ user.correo }}</td>
+      <td>{{ user.dni }}</td>
+      <td>{{ user.genero }}</td>
+      <td>{{ user.telefono }}</td>
+      <td>
+        <button (click)="editarUsuario(user)">Editar</button>
+        <button (click)="mostrarDetalles(user)">Detalles</button>
+        <button (click)="mostrarCambiarContrasena(user)">Cambiar Contraseña</button>
+        <button (click)="eliminarUsuario(user.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Edición de usuario -->
+<div *ngIf="usuarioEditando">
+  <h3>Editando: {{ usuarioEditando.usuario }}</h3>
+  <form (ngSubmit)="guardarCambiosUsuario()">
+    <input [(ngModel)]="usuarioEditando.nombre" name="nombreEdit" placeholder="Nombre" />
+    <input [(ngModel)]="usuarioEditando.apellidos" name="apellidosEdit" placeholder="Apellidos" />
+    <input [(ngModel)]="usuarioEditando.telefono" name="telefonoEdit" placeholder="Teléfono" />
+    <input [(ngModel)]="usuarioEditando.correo" name="correoEdit" placeholder="Correo" />
+    <input [(ngModel)]="usuarioEditando.genero" name="generoEdit" placeholder="Género" />
+    <button type="submit">Guardar cambios</button>
+    <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+  </form>
+</div>

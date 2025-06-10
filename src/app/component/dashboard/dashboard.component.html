@@ -1,15 +1,8 @@
-<nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #1976d2; color: white;">
-  <div>
-    <strong>Dashboard</strong>
-  </div>
-  <div>
-    <button (click)="logout()" style="background: white; color: #1976d2; padding: 0.5rem 1rem; border: none; border-radius: 5px;">
-      Cerrar sesión
-    </button>
-  </div>
+<nav>
+  <ul>
+    <li><a routerLink="users" routerLinkActive="active">Usuarios</a></li>
+    <li><button (click)="logout()">Cerrar sesión</button></li>
+  </ul>
 </nav>
 
-<div style="padding: 2rem;">
-  <h2>Bienvenido al Dashboard</h2>
-  <!-- Aquí va el contenido -->
-</div>
+<router-outlet></router-outlet>

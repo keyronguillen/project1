@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './../../auth/auth.service';
 import { Router } from '@angular/router';
 import { UserRegister } from '../../modelos/user.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
