@@ -4,11 +4,29 @@ import { UserService, User } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon'; // Opcional si usas íconos
+
+
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, 
+    FormsModule, 
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatIconModule,],
   templateUrl: './users.component.html',
+  styleUrls: ['./users.component.css'],
 })
 export class UserComponent implements OnInit {
   users: User[] = [];
@@ -16,7 +34,7 @@ export class UserComponent implements OnInit {
   usuarioEditando: Partial<User> & { contrasena?: string } | null = null;
   mostrarFormulario = false;
 
-  constructor(private userService: UserService, private toastr: ToastrService) {}
+  constructor(private userService: UserService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.obtenerUsuarios();

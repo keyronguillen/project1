@@ -1,130 +1,75 @@
-<h2>Registro de Usuario</h2>
-
-<form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
-
-  <div>
-    <label for="nombre">Nombre:</label>
-    <input
-      id="nombre"
-      name="nombre"
-      type="text"
-      [(ngModel)]="data.nombre"
-      required
-      minlength="2"
-      maxlength="50"
-    />
+<div class="split-container">
+  <div class="left-side">
+    <img src="assets/img/fondo.jpg" alt="Imagen de fondo">
   </div>
 
-  <div>
-    <label for="apellidos">Apellidos:</label>
-    <input
-      id="apellidos"
-      name="apellidos"
-      type="text"
-      [(ngModel)]="data.apellidos"
-      required
-      minlength="2"
-      maxlength="50"
-    />
+  <div class="right-side">
+    <div class="container">
+      <h2>Registro de Usuario</h2>
+      <p class="texto">Por favor, crea tu cuenta aqui para iniciar la experiencia.</p>
+
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
+
+        <div>
+          <label for="nombre">Nombre:</label>
+          <input id="nombre" name="nombre" type="text" [(ngModel)]="data.nombre" required minlength="2" maxlength="50" />
+        </div>
+
+        <div>
+          <label for="apellidos">Apellidos:</label>
+          <input id="apellidos" name="apellidos" type="text" [(ngModel)]="data.apellidos" required minlength="2" maxlength="50" />
+        </div>
+
+        <div>
+          <label for="telefono">Teléfono:</label>
+          <input id="telefono" name="telefono" type="tel" [(ngModel)]="data.telefono" pattern="^[0-9\-+\s()]*$" required maxlength="15" />
+        </div>
+
+        <div>
+          <label for="dni">DNI:</label>
+          <input id="dni" name="dni" type="text" [(ngModel)]="data.dni" required minlength="6" maxlength="15" />
+        </div>
+
+        <div>
+          <label for="correo">Correo electrónico:</label>
+          <input id="correo" name="correo" type="email" [(ngModel)]="data.correo" required />
+        </div>
+
+        <div>
+          <label for="usuario">Usuario:</label>
+          <input id="usuario" name="usuario" type="text" [(ngModel)]="data.usuario" required minlength="4" maxlength="20" />
+        </div>
+
+        <div>
+          <label for="contrasena">Contraseña:</label>
+          <input id="contrasena" name="contrasena" type="password" [(ngModel)]="data.contrasena" required minlength="6" />
+        </div>
+
+        <div>
+          <label for="genero">Género:</label>
+          <select id="genero" name="genero" [(ngModel)]="data.genero" required>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <button type="submit" [disabled]="!registerForm.form.valid">
+          Registrar
+        </button>
+
+        <div *ngIf="errorMsg" style="color: red; margin-top: 10px;">
+          {{ errorMsg }}
+        </div>
+
+        <div *ngIf="successMsg" style="color: green; margin-top: 10px;">
+          {{ successMsg }}
+        </div>
+      </form>
+
+      <div style="margin-top: 20px;">
+        <p>¿Ya tienes una cuenta? <a routerLink="/login">Ingresa aquí</a></p>
+      </div>
+    </div>
   </div>
-
-  <div>
-    <label for="telefono">Teléfono:</label>
-    <input
-      id="telefono"
-      name="telefono"
-      type="tel"
-      [(ngModel)]="data.telefono"
-      pattern="^[0-9\-+\s()]*$"
-      required
-      maxlength="15"
-    />
-  </div>
-
-  <div>
-    <label for="dni">DNI:</label>
-    <input
-      id="dni"
-      name="dni"
-      type="text"
-      [(ngModel)]="data.dni"
-      required
-      minlength="6"
-      maxlength="15"
-    />
-  </div>
-
-  <div>
-    <label for="correo">Correo electrónico:</label>
-    <input
-      id="correo"
-      name="correo"
-      type="email"
-      [(ngModel)]="data.correo"
-      required
-    />
-  </div>
-
-  <div>
-    <label for="usuario">Usuario:</label>
-    <input
-      id="usuario"
-      name="usuario"
-      type="text"
-      [(ngModel)]="data.usuario"
-      required
-      minlength="4"
-      maxlength="20"
-    />
-  </div>
-
-  <div>
-    <label for="contrasena">Contraseña:</label>
-    <input
-      id="contrasena"
-      name="contrasena"
-      type="password"
-      [(ngModel)]="data.contrasena"
-      required
-      minlength="6"
-    />
-  </div>
-
-  <div>
-    <label for="genero">Género:</label>
-    <select
-      id="genero"
-      name="genero"
-      [(ngModel)]="data.genero"
-      required
-    >
-      <option value="Masculino">Masculino</option>
-      <option value="Femenino">Femenino</option>
-      <option value="Otro">Otro</option>
-    </select>
-  </div>
-
-  <button type="submit" [disabled]="!registerForm.form.valid">
-    Registrar
-  </button>
-
-  <div *ngIf="errorMsg" style="color: red; margin-top: 10px;">
-    {{ errorMsg }}
-  </div>
-
-  <div *ngIf="successMsg" style="color: green; margin-top: 10px;">
-    {{ successMsg }}
-  </div>
-
-</form>
-
-<div style="margin-top: 20px;">
-  <p>¿Ya tienes una cuenta? <a routerLink="/login">Ingresa aquí</a></p>
 </div>
-
-<!-- Compare this snippet from project3/project-frontend/src/app/component/register/register.component.ts: -->
-<!-- import { Component } from '@angular/core'; -->
-<!-- import { Router } from '@angular/router'; -->
-<!-- import { AuthService } from '../../service/auth.service'; -->
-<!-- import { User } from '../../model/user.model'; -->
-<!-- import { HttpErrorResponse } from '@angular/common/http'; -->

@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   data: UserRegister = {

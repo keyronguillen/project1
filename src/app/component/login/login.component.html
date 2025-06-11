@@ -1,35 +1,55 @@
-<div class="container">
-  <h2>Iniciar Sesión</h2>
-  <p class="texto">Por favor, ingresa tus credenciales para acceder a tu cuenta.</p>
-
-  <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
-    <div>
-      <label for="usuario">Usuario</label>
-      <input type="text" id="usuario" name="usuario" [(ngModel)]="loginData.usuario" required #usuario="ngModel" />
-      <div *ngIf="usuario.invalid && usuario.touched">
-        Usuario es requerido
-      </div>
-    </div>
-
-    <div>
-      <label for="contrasena">Contraseña</label>
-      <input type="password" id="contrasena" name="contrasena" [(ngModel)]="loginData.contrasena" required
-        #contrasena="ngModel" />
-      <div *ngIf="contrasena.invalid && contrasena.touched">
-        Contraseña es requerida
-      </div>
-    </div>
-
-    <div *ngIf="errorMsg">{{ errorMsg }}</div>
-
-    <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
-  </form>
-
-  <div>
-    <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+<div class="login-wrapper">
+  <div class="left-side">
+    <img src="https://images.unsplash.com/photo-1542224566-0d75aee9f529" alt="Bienvenido" />
   </div>
 
-  <div>
-    <p>¿Olvidaste tu contraseña? <a routerLink="/reset-password">Recupera tu contraseña</a></p>
+  <div class="right-side">
+    <div class="container">
+      <h2>Iniciar Sesión</h2>
+      <p class="texto">Por favor, ingresa tus credenciales para acceder a tu cuenta.</p>
+
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+        <div>
+          <label for="usuario">Usuario</label>
+          <input
+            type="text"
+            id="usuario"
+            name="usuario"
+            [(ngModel)]="loginData.usuario"
+            required
+            #usuario="ngModel"
+          />
+          <div *ngIf="usuario.invalid && usuario.touched">
+            Usuario es requerido
+          </div>
+        </div>
+
+        <div>
+          <label for="contrasena">Contraseña</label>
+          <input
+            type="password"
+            id="contrasena"
+            name="contrasena"
+            [(ngModel)]="loginData.contrasena"
+            required
+            #contrasena="ngModel"
+          />
+          <div *ngIf="contrasena.invalid && contrasena.touched">
+            Contraseña es requerida
+          </div>
+        </div>
+
+        <div *ngIf="errorMsg" class="error-message">
+          {{ errorMsg }}
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+      </form>
+
+      <div class="extra-links">
+        <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+        <p>¿Olvidaste tu contraseña? <a routerLink="/reset-password">Recupera tu contraseña</a></p>
+      </div>
+    </div>
   </div>
 </div>

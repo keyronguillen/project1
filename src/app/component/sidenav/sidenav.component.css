@@ -1,0 +1,22 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 220px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.router-container {
+  padding: 20px;
+}
+
+.active {
+  font-weight: bold;
+  color: #1976d2;
+}
