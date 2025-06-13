@@ -13,6 +13,7 @@ import { InvoicesComponent } from './component/invoices/invoices.component';
 import { ProductsComponent } from './component/products/products.component';
 import { SettingsComponent } from './component/settings/settings.component';
 import { SellComponent } from './component/sell/sell.component';
+import { RoleGuard } from './auth/role.guard';
 
 export const routes: Routes = [
   {
@@ -22,22 +23,66 @@ export const routes: Routes = [
   },
   { path: 'register', component: RegisterComponent },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard], // ruta protegida,
-    children: [
-      { path: 'users', component: UserComponent },
-      { path: 'inventario', component: InventoryComponent },
-      { path: 'categorias', component: CategoriesComponent },
-      { path: 'descuentos', component: DiscountsComponent },
-      { path: 'panel-de-control', component: ControlPanelComponent },
-      { path: 'facturas', component: InvoicesComponent },
-      { path: 'productos', component: ProductsComponent },
-      { path: 'configuracion', component: SettingsComponent },
-      { path: 'ventas', component: SellComponent },
-      // { path: '', redirectTo: 'users', pathMatch: 'full' } // redirige a users por defecto
-    ],
-  },
+  path: 'dashboard',
+  component: DashboardComponent,
+  canActivate: [AuthGuard],
+  children: [
+    {
+      path: 'users',
+      loadComponent: () => import('./component/users/users.component').then(m => m.UserComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'inventario',
+      loadComponent: () => import('./component/inventory/inventory.component').then(m => m.InventoryComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'categorias',
+      loadComponent: () => import('./component/categories/categories.component').then(m => m.CategoriesComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'descuentos',
+      loadComponent: () => import('./component/discounts/discounts.component').then(m => m.DiscountsComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'ventas',
+      loadComponent: () => import('./component/sell/sell.component').then(m => m.SellComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'facturas',
+      loadComponent: () => import('./component/invoices/invoices.component').then(m => m.InvoicesComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1] }
+    },
+    {
+      path: 'productos',
+      loadComponent: () => import('./component/products/products.component').then(m => m.ProductsComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1, 3] }
+    },
+    {
+      path: 'configuracion',
+      loadComponent: () => import('./component/settings/settings.component').then(m => m.SettingsComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1, 2] }
+    },
+    {
+      path: 'panel-de-control',
+      loadComponent: () => import('./component/control-panel/control-panel.component').then(m => m.ControlPanelComponent),
+      canActivate: [RoleGuard],
+      data: { expectedRoles: [1, 2] }
+    }
+  ]
+},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];

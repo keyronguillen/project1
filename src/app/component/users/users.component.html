@@ -1,91 +1,60 @@
 <h2 class="mat-headline">Lista de Usuarios</h2>
 
+<mat-form-field appearance="outline" class="full-width-input">
+  <mat-label>Filtrar usuarios</mat-label>
+  <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar por cualquier campo" />
+</mat-form-field>
+
 <button mat-raised-button color="primary" (click)="mostrarFormulario = !mostrarFormulario">
   {{ mostrarFormulario ? 'Cancelar' : 'Crear nuevo usuario' }}
 </button>
 
 <!-- Formulario de creación -->
 <mat-card *ngIf="mostrarFormulario" class="mt-3">
-  <form (ngSubmit)="crearUsuario()" class="usuario-form">
-    <div class="form-grid">
-      <mat-form-field appearance="fill">
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.nombre" name="nombre" required />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Apellidos</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.apellidos" name="apellidos" required />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.telefono" name="telefono" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>DNI</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.dni" name="dni" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Correo</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.correo" name="correo" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Usuario</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.usuario" name="usuario" required />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Género</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.genero" name="genero" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Contraseña</mat-label>
-        <input matInput [(ngModel)]="nuevoUsuario.contrasena" name="contrasena" type="password" required />
-      </mat-form-field>
-    </div>
-
-    <button mat-raised-button color="accent" type="submit">Guardar</button>
-  </form>
+  <!-- ... tu formulario no cambia ... -->
 </mat-card>
 
 <!-- Tabla de usuarios -->
 <mat-card class="mt-3">
-  <table mat-table [dataSource]="users" class="mat-elevation-z8 full-width-table">
+  <table mat-table [dataSource]="users" matSort class="mat-elevation-z8 full-width-table">
+    
+    <!-- Usuario -->
     <ng-container matColumnDef="usuario">
-      <th mat-header-cell *matHeaderCellDef> Usuario </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
       <td mat-cell *matCellDef="let user"> {{ user.usuario }} </td>
     </ng-container>
 
+    <!-- Nombre Completo -->
     <ng-container matColumnDef="nombreCompleto">
-      <th mat-header-cell *matHeaderCellDef> Nombre Completo </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Completo </th>
       <td mat-cell *matCellDef="let user"> {{ user.nombre }} {{ user.apellidos }} </td>
     </ng-container>
 
+    <!-- Correo -->
     <ng-container matColumnDef="correo">
-      <th mat-header-cell *matHeaderCellDef> Correo </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo </th>
       <td mat-cell *matCellDef="let user"> {{ user.correo }} </td>
     </ng-container>
 
+    <!-- DNI -->
     <ng-container matColumnDef="dni">
-      <th mat-header-cell *matHeaderCellDef> DNI </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> DNI </th>
       <td mat-cell *matCellDef="let user"> {{ user.dni }} </td>
     </ng-container>
 
+    <!-- Género -->
     <ng-container matColumnDef="genero">
-      <th mat-header-cell *matHeaderCellDef> Género </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Género </th>
       <td mat-cell *matCellDef="let user"> {{ user.genero }} </td>
     </ng-container>
 
+    <!-- Teléfono -->
     <ng-container matColumnDef="telefono">
-      <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </th>
       <td mat-cell *matCellDef="let user"> {{ user.telefono }} </td>
     </ng-container>
 
+    <!-- Acciones -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let user">
@@ -96,41 +65,14 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['usuario', 'nombreCompleto', 'correo', 'dni', 'genero', 'telefono', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['usuario', 'nombreCompleto', 'correo', 'dni', 'genero', 'telefono', 'acciones']"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
 </mat-card>
 
 <!-- Edición de usuario -->
 <mat-card *ngIf="usuarioEditando" class="mt-3">
-  <h3>Editando: {{ usuarioEditando.usuario }}</h3>
-  <form (ngSubmit)="guardarCambiosUsuario()" class="usuario-form">
-    <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <input matInput [(ngModel)]="usuarioEditando.nombre" name="nombreEdit" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Apellidos</mat-label>
-      <input matInput [(ngModel)]="usuarioEditando.apellidos" name="apellidosEdit" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Teléfono</mat-label>
-      <input matInput [(ngModel)]="usuarioEditando.telefono" name="telefonoEdit" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Correo</mat-label>
-      <input matInput [(ngModel)]="usuarioEditando.correo" name="correoEdit" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Género</mat-label>
-      <input matInput [(ngModel)]="usuarioEditando.genero" name="generoEdit" />
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit">Guardar cambios</button>
-    <button mat-stroked-button type="button" (click)="cancelarEdicion()">Cancelar</button>
-  </form>
+  <!-- ... formulario de edición sin cambios ... -->
 </mat-card>

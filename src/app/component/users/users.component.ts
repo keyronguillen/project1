@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { UserService, User } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,13 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon'; // Opcional si usas íconos
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
+import { ViewChild, AfterViewInit } from '@angular/core';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, 
-    FormsModule, 
+  imports: [
     CommonModule,
     FormsModule,
     MatCardModule,
@@ -24,12 +29,20 @@ import { MatIconModule } from '@angular/material/icon'; // Opcional si usas íco
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    MatIconModule,],
+    MatSortModule,
+    MatPaginatorModule,
+    MatIconModule
+  ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
 })
-export class UserComponent implements OnInit {
-  users: User[] = [];
+export class UserComponent implements OnInit, AfterViewInit {
+
+  displayedColumns: string[] = ['usuario', 'nombreCompleto', 'correo', 'dni', 'genero', 'telefono', 'acciones'];
+
+  users = new MatTableDataSource<User>();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   nuevoUsuario: Partial<User> & { contrasena?: string } = this.usuarioVacio();
   usuarioEditando: Partial<User> & { contrasena?: string } | null = null;
   mostrarFormulario = false;
@@ -37,8 +50,20 @@ export class UserComponent implements OnInit {
   constructor(private userService: UserService, private toastr: ToastrService) { }
 
   ngOnInit() {
+    console.log('UserComponent inicializado');
     this.obtenerUsuarios();
   }
+
+  ngAfterViewInit() {
+    this.users.paginator = this.paginator;
+    this.users.sort = this.sort;
+  }
+
+  aplicarFiltro(event: Event) {
+    const filtro = (event.target as HTMLInputElement).value;
+    this.users.filter = filtro.trim().toLowerCase();
+  }
+
 
   usuarioVacio() {
     return {
@@ -55,7 +80,12 @@ export class UserComponent implements OnInit {
 
   obtenerUsuarios() {
     this.userService.getUsers().subscribe({
-      next: (data) => (this.users = data),
+      next: (data) => {
+        this.users.data = data;
+        this.users.paginator = this.paginator;
+        this.users.sort = this.sort;
+        console.log('Usuarios obtenidos:', data);
+      },
       error: (err) => this.toastr.error('Error al obtener usuarios'),
     });
   }
@@ -87,7 +117,7 @@ export class UserComponent implements OnInit {
   }
 
   editarUsuario(user: User) {
-    this.usuarioEditando = { ...user };
+    this.usuarioEditando = { ...user, contrasena: '' };
   }
 
   guardarCambiosUsuario() {

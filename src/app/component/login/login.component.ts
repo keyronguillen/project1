@@ -23,17 +23,17 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit() {
-    this.errorMsg = '';
-    this.authService.login(this.loginData).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/dashboard'], { replaceUrl: true });
-      },
-      error: (err) => {
-        this.errorMsg = 'Usuario o contraseña incorrectos';
-        console.error('Error login', err);
-      },
-    });
-  }
+onSubmit() {
+  this.errorMsg = '';
+  this.authService.login(this.loginData).subscribe({
+    next: (res) => {
+      localStorage.setItem('token', res.token);
+      this.router.navigate(['/dashboard'], { replaceUrl: true });
+    },
+    error: (err) => {
+      this.errorMsg = 'Usuario o contraseña incorrectos';
+      console.error('Error login', err);
+    },
+  });
+}
 }

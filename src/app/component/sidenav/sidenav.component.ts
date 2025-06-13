@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
+import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-sidenav',
-    imports: [
+  imports: [
     CommonModule,
     RouterModule,
     MatSidenavModule,
@@ -18,16 +20,35 @@ import { CommonModule } from '@angular/common';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    NavbarComponent
   ],
   templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.css'
+  styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent {
-  constructor(private router: Router) {}
+export class SidenavComponent implements OnInit {
+  role: number | null = null;
 
-  logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.authService.role$.subscribe(role => {
+      this.role = role;
+    });
   }
 
+  isAdmin(): boolean {
+    return this.role === 1;
+  }
+
+  isEditor(): boolean {
+    return this.role === 2;
+  }
+
+  isUser(): boolean {
+    return this.role === 3;
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }
