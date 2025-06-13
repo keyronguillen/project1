@@ -15,7 +15,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon'; // Opcional si usas íconos
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ViewChild, AfterViewInit } from '@angular/core';
+
+import { MatDialog } from '@angular/material/dialog';
+import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+
+
 
 
 @Component({
@@ -31,23 +39,24 @@ import { ViewChild, AfterViewInit } from '@angular/core';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule,
   ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
 })
 export class UserComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['usuario', 'nombreCompleto', 'correo', 'dni', 'genero', 'telefono', 'acciones'];
+  displayedColumns: string[] = ['usuario', 'nombreCompleto', 'correo', 'dni', 'genero', 'telefono', 'id_rol', 'acciones'];
 
   users = new MatTableDataSource<User>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  nuevoUsuario: Partial<User> & { contrasena?: string } = this.usuarioVacio();
+  // nuevoUsuario: Partial<User> & { contrasena?: string } = this.usuarioVacio();
   usuarioEditando: Partial<User> & { contrasena?: string } | null = null;
   mostrarFormulario = false;
 
-  constructor(private userService: UserService, private toastr: ToastrService) { }
+  constructor(private userService: UserService, private toastr: ToastrService, private dialog: MatDialog) { }
 
   ngOnInit() {
     console.log('UserComponent inicializado');
@@ -75,6 +84,7 @@ export class UserComponent implements OnInit, AfterViewInit {
       usuario: '',
       genero: '',
       contrasena: '',
+      id_rol: '',
     };
   }
 
@@ -90,34 +100,55 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
   }
 
-  crearUsuario() {
-    if (this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena) {
-      this.userService.createUser(this.nuevoUsuario).subscribe({
-        next: () => {
-          this.obtenerUsuarios();
-          this.toastr.success('Usuario creado correctamente');
-          this.nuevoUsuario = this.usuarioVacio();
-          this.mostrarFormulario = false;
-        },
-        error: () => this.toastr.error('Error al crear usuario'),
-      });
-    }
-  }
+  // crearUsuario() {
+  //   if (this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena) {
+  //     this.userService.createUser(this.nuevoUsuario).subscribe({
+  //       next: () => {
+  //         this.obtenerUsuarios();
+  //         this.toastr.success('Usuario creado correctamente');
+  //         this.nuevoUsuario = this.usuarioVacio();
+  //         this.mostrarFormulario = false;
+  //       },
+  //       error: () => this.toastr.error('Error al crear usuario'),
+  //     });
+  //   }
+  // }
 
   eliminarUsuario(id: number) {
-    if (confirm('¿Estás seguro de eliminar este usuario?')) {
-      this.userService.deleteUser(id.toString()).subscribe({
-        next: () => {
-          this.obtenerUsuarios();
-          this.toastr.success('Usuario eliminado');
-        },
-        error: () => this.toastr.error('Error al eliminar usuario'),
-      });
-    }
+    const confirmRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {
+        titulo: 'Confirmar eliminación',
+        mensaje: '¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.'
+      }
+    });
+
+    confirmRef.afterClosed().subscribe(confirmado => {
+      if (confirmado) {
+        this.userService.deleteUser(id.toString()).subscribe({
+          next: () => {
+            this.obtenerUsuarios();
+            this.toastr.success('Usuario eliminado exitosamente');
+          },
+          error: () => {
+            this.toastr.error('Error al eliminar usuario');
+          }
+        });
+      }
+    });
   }
 
+
   editarUsuario(user: User) {
-    this.usuarioEditando = { ...user, contrasena: '' };
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      data: user
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.obtenerUsuarios();
+      }
+    });
   }
 
   guardarCambiosUsuario() {
@@ -143,12 +174,34 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   mostrarCambiarContrasena(user: User) {
-    const nuevaPass = prompt(`Nueva contraseña para ${user.usuario}:`);
-    if (nuevaPass) {
-      this.userService.updateUser(user.id.toString(), { contrasena: nuevaPass }).subscribe({
-        next: () => this.toastr.success('Contraseña actualizada'),
-        error: () => this.toastr.error('Error al cambiar contraseña'),
-      });
-    }
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '400px',
+      data: { usuario: user.usuario }
+    });
+
+    dialogRef.afterClosed().subscribe(newPassword => {
+      if (newPassword) {
+        const confirmRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '350px',
+          data: {
+            titulo: 'Confirmar cambio de contraseña',
+            mensaje: `¿Estás seguro de cambiar la contraseña de ${user.usuario}?`
+          }
+        });
+
+        confirmRef.afterClosed().subscribe(confirmado => {
+          if (confirmado) {
+            this.userService.updateUser(user.id.toString(), { contrasena: newPassword }).subscribe({
+              next: () => {
+                this.toastr.success('Contraseña actualizada correctamente');
+              },
+              error: () => {
+                this.toastr.error('Error al cambiar la contraseña');
+              }
+            });
+          }
+        });
+      }
+    });
   }
 }

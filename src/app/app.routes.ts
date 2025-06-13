@@ -67,7 +67,7 @@ export const routes: Routes = [
       path: 'productos',
       loadComponent: () => import('./component/products/products.component').then(m => m.ProductsComponent),
       canActivate: [RoleGuard],
-      data: { expectedRoles: [1, 3] }
+      data: { expectedRoles: [3] }
     },
     {
       path: 'configuracion',

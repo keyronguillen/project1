@@ -12,6 +12,7 @@ export interface User {
   usuario: string;
   genero: string;
   creado_en: string;
+  id_rol: number;
   // ⚠️ contrasena se excluye del frontend por seguridad
 }
 
