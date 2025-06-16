@@ -1,5 +1,6 @@
 <h2 mat-dialog-title>Editar Usuario</h2>
-<mat-dialog-content>
+
+<mat-dialog-content class="dialog-content">
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Nombre</mat-label>
     <input matInput [(ngModel)]="editedUser.nombre" />
@@ -31,7 +32,7 @@
   </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" class="dialog-actions">
   <button mat-button (click)="cancelar()">Cancelar</button>
-  <button mat-button color="primary" (click)="guardarCambios()">Guardar</button>
+  <button mat-raised-button color="primary" (click)="guardarCambios()">Guardar</button>
 </mat-dialog-actions>

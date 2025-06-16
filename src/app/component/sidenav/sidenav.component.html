@@ -1,43 +1,45 @@
-<!-- <p style="color:red; font-weight:bold;">Role actual: {{ role }}</p> -->
-
-<!-- <app-navbar></app-navbar> -->
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer mode="side" opened class="sidenav">
+  <mat-sidenav 
+    #drawer 
+    [mode]="isSmallScreen ? 'over' : 'side'" 
+    [(opened)]="isSidenavOpen" 
+    class="sidenav">
+
     <mat-nav-list>
       <!-- Admin only -->
       <ng-container *ngIf="isAdmin()">
-        <a mat-list-item routerLink="/dashboard/users" routerLinkActive="active">Usuarios</a>
+        <a mat-list-item routerLink="/dashboard/users" routerLinkActive="active" (click)="maybeCloseSidenav()">Usuarios</a>
         <hr>
-        <a mat-list-item routerLink="/dashboard/inventario" routerLinkActive="active">Inventarios</a>
-        <a mat-list-item routerLink="/dashboard/categorias" routerLinkActive="active">Categorias</a>
-        <a mat-list-item routerLink="/dashboard/descuentos" routerLinkActive="active">Descuentos</a>
-        <a mat-list-item routerLink="/dashboard/ventas" routerLinkActive="active">Ventas</a>
-        <a mat-list-item routerLink="/dashboard/facturas" routerLinkActive="active">Facturas</a>
-        <a mat-list-item routerLink="/dashboard/productos" routerLinkActive="active">Productos</a>
+        <a mat-list-item routerLink="/dashboard/inventario" routerLinkActive="active" (click)="maybeCloseSidenav()">Inventarios</a>
+        <a mat-list-item routerLink="/dashboard/categorias" routerLinkActive="active" (click)="maybeCloseSidenav()">Categorias</a>
+        <a mat-list-item routerLink="/dashboard/descuentos" routerLinkActive="active" (click)="maybeCloseSidenav()">Descuentos</a>
+        <a mat-list-item routerLink="/dashboard/ventas" routerLinkActive="active" (click)="maybeCloseSidenav()">Ventas</a>
+        <a mat-list-item routerLink="/dashboard/facturas" routerLinkActive="active" (click)="maybeCloseSidenav()">Facturas</a>
+        <a mat-list-item routerLink="/dashboard/productos" routerLinkActive="active" (click)="maybeCloseSidenav()">Productos</a>
         <hr>
-        <a mat-list-item routerLink="/dashboard/configuracion" routerLinkActive="active">Configuracion</a>
-        <a mat-list-item routerLink="/dashboard/panel-de-control" routerLinkActive="active">Panel de Control</a>
+        <a mat-list-item routerLink="/dashboard/configuracion" routerLinkActive="active" (click)="maybeCloseSidenav()">Configuracion</a>
+        <a mat-list-item routerLink="/dashboard/panel-de-control" routerLinkActive="active" (click)="maybeCloseSidenav()">Panel de Control</a>
       </ng-container>
 
       <!-- Editor only -->
       <ng-container *ngIf="isEditor()">
-        <a mat-list-item routerLink="/dashboard/configuracion" routerLinkActive="active">Configuracion</a>
-        <a mat-list-item routerLink="/dashboard/panel-de-control" routerLinkActive="active">Panel de Control</a>
+        <a mat-list-item routerLink="/dashboard/configuracion" routerLinkActive="active" (click)="maybeCloseSidenav()">Configuracion</a>
+        <a mat-list-item routerLink="/dashboard/panel-de-control" routerLinkActive="active" (click)="maybeCloseSidenav()">Panel de Control</a>
       </ng-container>
 
       <!-- User only -->
       <ng-container *ngIf="isUser()">
-        <a mat-list-item routerLink="/dashboard/productos" routerLinkActive="active">Productos</a>
+        <a mat-list-item routerLink="/dashboard/productos" routerLinkActive="active" (click)="maybeCloseSidenav()">Productos</a>
       </ng-container>
 
       <hr>
-      <a mat-list-item (click)="logout()">Cerrar sesión</a>
+      <a mat-list-item (click)="logout(); maybeCloseSidenav()">Cerrar sesión</a>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
     <mat-toolbar color="primary">
-      <button mat-icon-button (click)="drawer.toggle()">
+      <button mat-icon-button (click)="toggleSidenav()">
         <mat-icon>menu</mat-icon>
       </button>
       <span>Dashboard</span>

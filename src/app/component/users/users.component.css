@@ -1,20 +1,118 @@
-.usuario-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+html, body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
+h2.mat-headline {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.mt-3 {
-  margin-top: 1.5rem;
+/* Campo de filtro */
+.full-width-input {
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-.full-width-table {
+/* Estilo de tarjetas */
+mat-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* === Tabla === */
+.table-container {
   width: 100%;
   overflow-x: auto;
 }
+
+/* Asegura que mat-table se comporte correctamente */
+.full-width-table {
+  min-width: 800px;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+th.mat-header-cell {
+  background-color: #57b846;
+  color: white;
+  font-weight: 600;
+  text-align: left;
+}
+
+td.mat-cell {
+  color: #333;
+  padding: 10px;
+}
+
+tr.mat-row:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+/* Botones de acciones */
+button[mat-button] {
+  font-size: 13px;
+  margin-right: 8px;
+  text-transform: none;
+}
+
+button[color="primary"] {
+  color: #1976d2;
+}
+
+button[color="accent"] {
+  color: #ff9800;
+}
+
+button[color="warn"] {
+  color: #e53935;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  mat-card {
+    padding: 15px;
+  }
+
+  h2.mat-headline {
+    font-size: 20px;
+  }
+
+  th.mat-header-cell, td.mat-cell {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  button[mat-button] {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .full-width-input {
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h2.mat-headline {
+    font-size: 18px;
+  }
+
+  th.mat-header-cell, td.mat-cell {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  button[mat-button] {
+    font-size: 11px;
+  }
+}
+/* Estilo de mensajes de error */

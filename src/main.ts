@@ -11,8 +11,10 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideToastr({
       positionClass: 'toast-bottom-right',
+      closeButton: true,
+      progressBar: true,
       timeOut: 3000,
-      preventDuplicates: true,
+      preventDuplicates: true
     }),
     provideAnimations(),
     provideHttpClient(withInterceptors([

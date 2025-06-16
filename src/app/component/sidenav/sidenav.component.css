@@ -6,16 +6,32 @@
   width: 220px;
 }
 
+/* Cuando la pantalla es pequeña, ajustamos el sidenav para que se comporte tipo overlay */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 200px;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+}
+
+/* Estilos para el contenido principal para que ocupe todo el espacio disponible */
 .main-content {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.router-container {
   padding: 20px;
+  box-sizing: border-box;
 }
 
+/* Contenedor del router para dar espacio */
+.router-container {
+  flex-grow: 1;
+}
+
+/* Estilo para el link activo */
 .active {
   font-weight: bold;
   color: #1976d2;

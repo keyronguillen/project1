@@ -1,0 +1,26 @@
+.dialog-content {
+  max-width: 400px;
+  min-width: 280px;
+  padding: 16px 24px 12px 24px;
+  box-sizing: border-box;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dialog-actions {
+  padding: 8px 24px 16px 24px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .dialog-content {
+    max-width: 100%;
+    min-width: unset;
+    padding: 12px 16px 8px 16px;
+  }
+  .dialog-actions {
+    padding: 8px 16px 12px 16px;
+  }
+}
